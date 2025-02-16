@@ -7,6 +7,7 @@ export function renderCodeTemplate(layerData: LayerData): string {
     if (!layerData.css || !layerData.css.length) return '';
     var tab = ['<ul class="tab" id="code-tab" >',
         '<li class="icon-css-panel" data-id="css-panel" data-codeType="css"></li>',
+        '<li class="icon-css-panel" data-id="react-panel" data-codeType="react"></li>', // 新增React标签
         '<li class="icon-android-panel" data-id="android-panel" data-codeType="android" ></li>',
         '<li class="icon-ios-panel" data-id="ios-panel" data-codeType="ios" ></li>',
         '</ul>'
@@ -58,7 +59,25 @@ export function renderCodeTemplate(layerData: LayerData): string {
             getIOSImageSrc(layerData) +
             '</textarea></label>', '</div>');
     }
-    return propertyType('CODE TEMPLATE', [tab, css, android.join(''), ios.join('')].join(''), true);
+    // CODE TEMPLATE 新增 React 样式模板
+    var cssReact = [
+        '<div id="react-panel" class="code-item item">',
+        '<label><textarea id="css" rows="' + (layerData.css.length + 1) + '" readonly="readonly">{',
+        layerData.css
+            .map(style => {
+                // 转换CSS属性名为驼峰式，并对值加上单引号
+                const [property, value] = style.split(': ');
+                const camelCaseProp = property
+                    .replace(/-([a-z])/g, (g) => g[1].toUpperCase())
+                    .replace(';', '');
+                const quotedValue = `'${value.replace(';', '')}'`; // 确保值用单引号包裹，并移除结尾的分号
+                return `  ${camelCaseProp}: ${quotedValue}`;
+            })
+            .join(',\n'),
+        '\n}</textarea></label>',
+        '</div>'
+    ].join('');
+    return propertyType('CODE TEMPLATE', [tab, css, android.join(''), ios.join(''), cssReact].join(''), true);
 }
 function getAndroidWithHeight(layerData: LayerData) {
     return "android:layout_width=\"" + unitSize(layerData.rect.width, false) + "\"\r\n" + "android:layout_height=\"" + unitSize(layerData.rect.height, false) + "\"\r\n";
