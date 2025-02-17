@@ -31,3 +31,26 @@ If you encounter problems managing (toggle hidden/locked, remove, and export) ma
 - [Download](https://github.com/qjebbs/sketch-meaxure/releases/latest/download/sketch-meaxure.sketchplugin.zip) the latest release of the plugin
 - Un-zip
 - Double-click on Sketch-Meaxure.sketchplugin
+
+## Development Guide
+
+1. Delete the `package-lock.json` file.
+
+2. Node version requirements (Note: Use this specific Node version to avoid dependency installation errors):
+```
+nvm use 16.14.2
+
+node -v   
+v16.14.2
+```
+
+3. Set npm registry to npm (You MUST install dependencies using the following command to avoid errors):
+```
+npm install --ignore-scripts
+```
+
+## Plugin Build
+```
+npm run start 
+npm run build
+```
